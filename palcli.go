@@ -88,12 +88,17 @@ func main() {
 	switch cmd {
 
 	case "ban":
-		if len(args) < 1 {
-			fmt.Println("ban <steamid>")
+		if len(args) < 2 {
+			fmt.Println("ban <userid> <message>")
 			return
 		}
+		msg := "Bye"
+		if len(args) >= 2 {
+			msg = strings.Join(args[1:], " ")
+		}
 		out(c.do("POST", "/ban", map[string]any{
-			"steamid": args[0],
+			"userid": args[0],
+			"message": msg,
 		}))
 
 	case "broadcast":
@@ -111,11 +116,16 @@ func main() {
 
 	case "kick":
 		if len(args) < 1 {
-			fmt.Println("kick <steamid>")
+			fmt.Println("kick <userid> [reason]")
 			return
 		}
+		msg := "Bye"
+		if len(args) >= 2 {
+			msg = strings.Join(args[1:], " ")
+		}
 		out(c.do("POST", "/kick", map[string]any{
-			"steamid": args[0],
+			"userid": args[0],
+            "message": msg,
 		}))
 
 	case "metrics":
@@ -126,6 +136,9 @@ func main() {
 
 	case "save":
 		out(c.do("POST", "/save", nil))
+
+	case "settings":
+		out(c.do("GET", "/settings", nil))
 
 	case "shutdown":
 		delay := 10
@@ -140,6 +153,19 @@ func main() {
 			"waittime": delay,
 			"message":  msg,
 		}))
+
+	case "stop":
+		out(c.do("POST", "/stop", nil))
+
+	case "unban":
+		if len(args) < 1 {
+			fmt.Println("unban <steamid>")
+			return
+		}
+		out(c.do("POST", "/unban", map[string]any{
+			"userid": args[0],
+		}))
+
 
 	default:
 		usage()
@@ -164,14 +190,17 @@ func usage() {
 	fmt.Println(`palcli [flags] <command>
 
 Commands:
-  ban <steamid>
+  ban <steamid> [reason]
   broadcast <message>
   info
-  kick <steamid>
+  kick <userid> [reason]
   metrics
   players
   save
+  settings
   shutdown [seconds] [message]
+  stop
+  unban <userid>
 
 Flags:
   -url   API base (default http://127.0.0.1:8212/v1/api)
