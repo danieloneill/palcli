@@ -10,8 +10,8 @@ Full options are:
 palcli [flags] <command>
 
 Commands:
+  announce <message>
   ban <userid> [reason]
-  broadcast <message>
   info
   kick <userid> [reason]
   metrics
@@ -36,7 +36,7 @@ palcli -pass=secret info
 palcli -pass=secret metrics
 palcli -pass=secret players
 palcli -pass=secret kick 7656119XXXXXXXXXX "eat a big pile of mcdonald's, undesirable!"
-palcli -pass=secret broadcast "server restart in 5 minasauruses"
+palcli -pass=secret announce "server restart in 5 minasauruses"
 palcli -pass=secret save
 palcli -pass=secret shutdown 60 "latte nerds"
 ```
@@ -77,7 +77,7 @@ KillSignal=SIGINT
 KillMode=mixed
 TimeoutStopSec=120
 
-ExecStop=/usr/local/bin/palcli -pass=secret broadcast "Server shutting down in 60 seconds"
+ExecStop=/usr/local/bin/palcli -pass=secret announce "Server shutting down in 60 seconds"
 ExecStop=/bin/sleep 60
 ExecStop=/usr/local/bin/palcli -pass=secret save
 ExecStop=/usr/local/bin/palcli -pass=secret shutdown 5 "Shutting down now"
