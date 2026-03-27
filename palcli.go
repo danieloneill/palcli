@@ -87,6 +87,16 @@ func main() {
 
 	switch cmd {
 
+	case "announce":
+		if len(args) < 1 {
+			fmt.Println("announce <message>")
+			return
+		}
+		msg := strings.Join(args, " ")
+		out(c.do("POST", "/announce", map[string]any{
+			"message": msg,
+		}))
+
 	case "ban":
 		if len(args) < 2 {
 			fmt.Println("ban <userid> <message>")
@@ -98,16 +108,6 @@ func main() {
 		}
 		out(c.do("POST", "/ban", map[string]any{
 			"userid": args[0],
-			"message": msg,
-		}))
-
-	case "broadcast":
-		if len(args) < 1 {
-			fmt.Println("broadcast <message>")
-			return
-		}
-		msg := strings.Join(args, " ")
-		out(c.do("POST", "/broadcast", map[string]any{
 			"message": msg,
 		}))
 
@@ -190,8 +190,8 @@ func usage() {
 	fmt.Println(`palcli [flags] <command>
 
 Commands:
-  ban <steamid> [reason]
-  broadcast <message>
+  announce <message>
+  ban <userid> [reason]
   info
   kick <userid> [reason]
   metrics
